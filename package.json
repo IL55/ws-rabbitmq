@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://branoholy.github.io/ws-rabbitmq",
   "dependencies": {
-    "mqtt": "2.18.8",
+    "async-mqtt": "2.0.0",
     "react": "16.6.0",
     "react-dom": "16.6.0",
     "react-scripts": "2.0.5"

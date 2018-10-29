@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Mqtt from 'mqtt';
+import Mqtt from 'async-mqtt';
+
+const QOS = 2;
 
 const utf8Decoder = new TextDecoder('utf-8');
 
@@ -60,57 +62,58 @@ export default class RabbitViewer extends Component {
     });
   });
 
-  endClient = this.withErrorHandling(() => {
-    this.state.client.end(false, () =>
-      this.setState({
-        client: null
-      })
-    );
-  });
-
-  disconnect = this.withErrorHandling(() => {
+  disconnect = this.withErrorHandling(async () => {
     const { client, subscriptions } = this.state;
 
     if (subscriptions.length > 0) {
-      client.unsubscribe(subscriptions.map(({ topic }) => topic), () => this.endClient());
-    } else {
-      this.endClient();
+      await client.unsubscribe(subscriptions.map(({ topic }) => topic));
     }
+
+    await client.end();
+
+    this.setState({
+      client: null,
+      subscriptions: []
+    });
   });
 
   publish = this.withFormHandling(({ topic, message }) => {
     document.getElementById('publish-message').value = '';
-    this.state.client.publish(topic, message, { qos: 2 });
+    this.state.client.publish(topic, message, { qos: QOS });
   });
 
-  subscribe = this.withFormHandling(({ topic }) => {
+  isSubscribedTo = this.withErrorHandling(topic =>
+    this.state.subscriptions.some(subscription => subscription.topic === topic)
+  );
+
+  subscribe = this.withFormHandling(async ({ topic }) => {
     document.getElementById('subscribe-topic').value = '';
 
-    const { client, subscriptions } = this.state;
+    const { client } = this.state;
 
-    if (subscriptions.some(subscription => subscription.topic === topic)) {
+    if (this.isSubscribedTo(topic)) {
       return;
     }
 
-    client.subscribe(topic, { qos: 2 }, (_error, incomingSubscriptions) => {
-      this.setState(prevState => ({
-        subscriptions: [
-          ...prevState.subscriptions,
-          ...incomingSubscriptions.map(subscription => ({
-            topic: subscription.topic,
-            messages: []
-          }))
-        ]
-      }));
-    });
+    const subscriptions = await client.subscribe(topic, { qos: QOS });
+
+    this.setState(prevState => ({
+      subscriptions: [
+        ...prevState.subscriptions,
+        ...subscriptions.map(subscription => ({
+          topic: subscription.topic,
+          messages: []
+        }))
+      ]
+    }));
   });
 
-  unsubscribe = this.withErrorHandling(topic => {
-    this.state.client.unsubscribe(topic, () =>
-      this.setState(({ subscriptions }) => ({
-        subscriptions: subscriptions.filter(subscription => subscription.topic !== topic)
-      }))
-    );
+  unsubscribe = this.withErrorHandling(async topic => {
+    await this.state.client.unsubscribe(topic);
+
+    this.setState(({ subscriptions }) => ({
+      subscriptions: subscriptions.filter(subscription => subscription.topic !== topic)
+    }));
   });
 
   render() {
@@ -128,7 +131,7 @@ export default class RabbitViewer extends Component {
       return (
         <form onSubmit={this.connect}>
           <label htmlFor="url">URL*:</label>{' '}
-          <input id="url" name="url" placeholder="ws://" defaultValue="http://localhost:15675/ws" required />{' '}
+          <input id="url" name="url" placeholder="ws://" defaultValue="ws://localhost:15675/ws" required />{' '}
           <input type="submit" value="Connect" />
         </form>
       );
@@ -139,7 +142,7 @@ export default class RabbitViewer extends Component {
         <div>
           <h2>Status</h2>
           <div>
-            Connected to {`${client.options.href} `}
+            Connected to {`${client._client.options.href} `}
             <button type="button" onClick={this.disconnect}>
               Disconnect
             </button>
