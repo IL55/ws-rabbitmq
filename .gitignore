@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build
+build/
+
+# VS Code
+.vscode/
+
+# Misc
+others/
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
