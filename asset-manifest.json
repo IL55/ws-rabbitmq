@@ -1,13 +1,13 @@
 {
-  "main.css": "/ws-rabbitmq/static/css/main.0e85dc3f.chunk.css",
-  "main.js": "/ws-rabbitmq/static/js/main.8840b907.chunk.js",
-  "main.js.map": "/ws-rabbitmq/static/js/main.8840b907.chunk.js.map",
-  "static/js/1.50d7134d.chunk.js": "/ws-rabbitmq/static/js/1.50d7134d.chunk.js",
-  "static/js/1.50d7134d.chunk.js.map": "/ws-rabbitmq/static/js/1.50d7134d.chunk.js.map",
+  "main.css": "/ws-rabbitmq/static/css/main.12a218a4.chunk.css",
+  "main.js": "/ws-rabbitmq/static/js/main.dff4f7ad.chunk.js",
+  "main.js.map": "/ws-rabbitmq/static/js/main.dff4f7ad.chunk.js.map",
+  "static/js/1.755fe0e0.chunk.js": "/ws-rabbitmq/static/js/1.755fe0e0.chunk.js",
+  "static/js/1.755fe0e0.chunk.js.map": "/ws-rabbitmq/static/js/1.755fe0e0.chunk.js.map",
   "runtime~main.js": "/ws-rabbitmq/static/js/runtime~main.1cea7d58.js",
   "runtime~main.js.map": "/ws-rabbitmq/static/js/runtime~main.1cea7d58.js.map",
-  "static/css/main.0e85dc3f.chunk.css.map": "/ws-rabbitmq/static/css/main.0e85dc3f.chunk.css.map",
+  "static/css/main.12a218a4.chunk.css.map": "/ws-rabbitmq/static/css/main.12a218a4.chunk.css.map",
   "index.html": "/ws-rabbitmq/index.html",
-  "precache-manifest.a1738ff9198790cda9159dd3207b8fb3.js": "/ws-rabbitmq/precache-manifest.a1738ff9198790cda9159dd3207b8fb3.js",
+  "precache-manifest.05e314ed97abbd3ce8b68219744a6242.js": "/ws-rabbitmq/precache-manifest.05e314ed97abbd3ce8b68219744a6242.js",
   "service-worker.js": "/ws-rabbitmq/service-worker.js"
 }
