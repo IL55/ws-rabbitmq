@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Mqtt from 'async-mqtt';
 
-const QOS = 2;
+const QOS = 1;
 
 const utf8Decoder = new TextDecoder('utf-8');
 
@@ -42,11 +42,16 @@ export default class RabbitViewer extends Component {
     });
 
   connect = this.withFormHandling(({ url }) => {
-    const client = Mqtt.connect(url);
+    const client = Mqtt.connect(url, {
+      username: 'nd',
+      password: 'nd123'
+    });
 
     client.on('connect', () => this.setState({ client }));
 
     client.on('message', (topic, message) => {
+      console.log('message', utf8Decoder.decode(message));
+      console.log('topic', topic);
       this.setState(prevState => ({
         subscriptions: prevState.subscriptions.map(subscription => {
           if (subscription.topic !== topic) {
@@ -131,7 +136,7 @@ export default class RabbitViewer extends Component {
       return (
         <form onSubmit={this.connect}>
           <label htmlFor="url">URL*:</label>{' '}
-          <input id="url" name="url" placeholder="ws://" defaultValue="ws://localhost:15675/ws" required />{' '}
+          <input id="url" name="url" placeholder="ws://" defaultValue="ws://10.0.2.111:15675/ws" required />{' '}
           <input type="submit" value="Connect" />
         </form>
       );
